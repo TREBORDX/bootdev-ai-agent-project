@@ -31,3 +31,20 @@ def get_file_content(working_directory: str, file_path: str) -> str:
 
     except Exception as e:
         return f"Error: loading files {e}"
+
+schema_get_files_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "Reads the content of a given file within a file path",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Directory path to a file, relative to the working directory (default is the working directory itself)",
+                }
+            },
+        },
+    },
+}
