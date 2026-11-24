@@ -1,5 +1,5 @@
-import json
 import os, argparse
+import sys
 from dotenv import load_dotenv
 from openai import OpenAI
 from prompts import system_prompt
@@ -32,11 +32,11 @@ messages = [
 
 finalReached = False
 
-for i in range(5):
+for _ in range(20):
 
 
     response = client.chat.completions.create(
-        model="openrouter/free",
+        model="openrouter/auto",
         messages=messages,
         tools=available_functions,
     )
@@ -50,7 +50,6 @@ for i in range(5):
 
     if message.tool_calls is not None:
         for tool_call in message.tool_calls:
-            function_args = json.loads(tool_call.function.arguments or "{}")
             result_message = call_function(tool_call, args.verbose)
             messages.append(result_message)
 
@@ -61,7 +60,8 @@ for i in range(5):
         print("Final response: ")
         finalReached = True
         print(message.content)
-        break;
+        break
 
 if not finalReached:
     print("Reached maximum amount of tool calls before finishing :(")
+    sys.exit(1)
