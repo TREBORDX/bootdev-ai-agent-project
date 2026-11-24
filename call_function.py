@@ -47,8 +47,3 @@ def call_function(tool_call, verbose: bool = False) -> dict:
     "tool_call_id": tool_call.id,
     "content": result,
 }
-
-
-
-
-    
