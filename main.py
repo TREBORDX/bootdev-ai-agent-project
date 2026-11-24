@@ -60,7 +60,7 @@ for i in range(5):
     else:
         print("Final response: ")
         finalReached = True
-        print(message)
+        print(message.content)
         break;
 
 if not finalReached:
