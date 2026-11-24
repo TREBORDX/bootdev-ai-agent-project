@@ -3,7 +3,7 @@ import os, argparse
 from dotenv import load_dotenv
 from openai import OpenAI
 from prompts import system_prompt
-from call_function import available_functions
+from call_function import available_functions, call_function
 
 load_dotenv()
 api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -35,7 +35,6 @@ response = client.chat.completions.create(
     tools=available_functions,
 )
 if args.verbose:
-    
     print(f"User prompt: {args.user_prompt}")
     print("Prompt tokens: ", response.usage.prompt_tokens)
     print("Response tokens: ", response.usage.completion_tokens)
@@ -45,7 +44,12 @@ message = response.choices[0].message
 if message.tool_calls is not None:
     for tool_call in message.tool_calls:
         function_args = json.loads(tool_call.function.arguments or "{}")
-        print(f"Calling function: {tool_call.function.name}({function_args})")
+        result_message = call_function(tool_call, args.verbose)
+        print(result_message)
+
+        if args.verbose:
+            print(f"-> {result_message['content']}")
+
 
 else:
     print(message)
